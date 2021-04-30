@@ -8,14 +8,16 @@ const districtId = '<DISTRICT-ID>'; // Replace value here
 
 const intervalInMs = 300000; // 5 mins interval
 
-function getCurrentDate() {
+function getDate() {
     const today = new Date();
-    const dd = today.getDate();
-    const mm = today.getMonth() + 1;
-    const yyyy = today.getFullYear();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+    const dd = tomorrow.getDate();
+    const mm = tomorrow.getMonth() + 1;
+    const yyyy = tomorrow.getFullYear();
     return `${dd < 10 ? '0' + dd : dd}-${mm < 10 ? '0' + mm : mm}-${yyyy}`
 }
-const date = getCurrentDate();
+const date = getDate();
 
 function pingCowin() {
     axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${date}`).then((result) => {
