@@ -22,10 +22,13 @@ const date = getDate();
 function pingCowin() {
     axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${date}`).then((result) => {
         if (result.data.centers && result.data.centers.length) {
-            axios.post(`https://maker.ifttt.com/trigger/${iftttWebhookName}/with/key/${iftttWebhookKey}`, { value1: result.data.centers.length }).then(() => {
-                console.log('Sent Notification to Phone \nStopping Pinger...')
-                clearInterval(timer);
-            });
+            const availableSessions = result.data.centers.filter((center) => center.sessions.some((val) => val.available_capacity));
+            if (availableSessions.length) {
+                axios.post(`https://maker.ifttt.com/trigger/${iftttWebhookName}/with/key/${iftttWebhookKey}`, { value1: availableSessions.length }).then(() => {
+                    console.log('Sent Notification to Phone \nStopping Pinger...')
+                    clearInterval(timer);
+                });
+            }
         }
     }).catch((err) => {
         console.log("Error: " + err.message);
