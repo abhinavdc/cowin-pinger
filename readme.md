@@ -3,7 +3,7 @@ Get notified on your phone when there is a vaccine slot available at your locati
 
 ### Getting Started
 
-- Setup IFTTT to send and recieve notifications from this [article](https://betterprogramming.pub/how-to-send-push-notifications-to-your-phone-from-any-script-6b70e34748f6).
+- Setup IFTTT to send and recieve notifications as shown in this [article](https://betterprogramming.pub/how-to-send-push-notifications-to-your-phone-from-any-script-6b70e34748f6).
 
 - Install IFTTT App on phone to recieve notifications
 
