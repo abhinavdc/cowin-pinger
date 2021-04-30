@@ -5,6 +5,7 @@ const iftttWebhookKey = '<IFTTT-KEY>' // Replace value here
 const iftttWebhookName = '<IFTTT-WEBHOOK-NAME>' // Replace value here
 const districtId = '<DISTRICT-ID>'; // Replace value here
 const yourAge = 27  //Replace age with your age.
+const appointmentsListLimit = 2 //Increase/Decrease it based on the amount of information you want in the notification.
 
 
 const intervalInMs = 900000; // 15 mins interval
@@ -25,12 +26,16 @@ function pingCowin() {
         const { centers }= result.data;
         let isSlotAvailable = false;
         let dataOfSlot = "";
+        let appointmentsAvailableCount = 0;
         if(centers.length) {
             centers.forEach(center => {
                 center.sessions.forEach((session => {
-                    if(session.min_age_limit < age && session.available_capacity > 0) {
+                    if(session.min_age_limit < yourAge && session.available_capacity > 0) {
                         isSlotAvailable = true
-                        dataOfSlot = `${dataOfSlot}Slot for ${session.available_capacity} is available: ${center.name} on ${session.date}\n`;
+                        appointmentsAvailableCount++;
+                        if(appointmentsAvailableCount <= appointmentsListLimit) {
+                            dataOfSlot = `${dataOfSlot}\nSlot for ${session.available_capacity} is available: ${center.name} on ${session.date}`;
+                        }
                     }
                 }))
             });
