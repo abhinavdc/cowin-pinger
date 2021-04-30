@@ -6,7 +6,7 @@ const iftttWebhookName = '<IFTTT-WEBHOOK-NAME>' // Replace value here
 const districtId = '<DISTRICT-ID>'; // Replace value here
 
 
-const intervalInMs = 300000; // 5 mins interval
+const intervalInMs = 900000; // 15 mins interval
 
 function getDate() {
     const today = new Date();
