@@ -49,9 +49,9 @@ After replacing all required values
 - Install dependencies by running `npm install`
 - Run Script - `node app.js`
 
-## Developer Todo
-Add more District IDs to readme me
-Add option for Pin Code search
-Check minimum age at centers before sending notification
+### Developer Todo
+- Add more District IDs to readme me
+- Add option for Pin Code search
+- Check minimum age at centers before sending notification
 
 
