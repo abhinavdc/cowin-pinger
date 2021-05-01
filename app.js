@@ -4,6 +4,8 @@ const axios = require('axios')
 const iftttWebhookKey = '<IFTTT-KEY>' // Replace value here
 const iftttWebhookName = '<IFTTT-WEBHOOK-NAME>' // Replace value here
 const districtId = '<DISTRICT-ID>'; // Replace value here
+const yourAge = 27  //Replace age with your age.
+const appointmentsListLimit = 2 //Increase/Decrease it based on the amount of information you want in the notification.
 
 
 const intervalInMs = 900000; // 15 mins interval
@@ -21,14 +23,28 @@ const date = getDate();
 
 function pingCowin() {
     axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${date}`).then((result) => {
-        if (result.data.centers && result.data.centers.length) {
-            const availableSessions = result.data.centers.filter((center) => center.sessions.some((val) => val.available_capacity));
-            if (availableSessions.length) {
-                axios.post(`https://maker.ifttt.com/trigger/${iftttWebhookName}/with/key/${iftttWebhookKey}`, { value1: availableSessions.length }).then(() => {
-                    console.log('Sent Notification to Phone \nStopping Pinger...')
-                    clearInterval(timer);
-                });
-            }
+        const { centers }= result.data;
+        let isSlotAvailable = false;
+        let dataOfSlot = "";
+        let appointmentsAvailableCount = 0;
+        if(centers.length) {
+            centers.forEach(center => {
+                center.sessions.forEach((session => {
+                    if(session.min_age_limit < yourAge && session.available_capacity > 0) {
+                        isSlotAvailable = true
+                        appointmentsAvailableCount++;
+                        if(appointmentsAvailableCount <= appointmentsListLimit) {
+                            dataOfSlot = `${dataOfSlot}\nSlot for ${session.available_capacity} is available: ${center.name} on ${session.date}`;
+                        }
+                    }
+                }))
+            });
+        }
+        if(isSlotAvailable) {
+            axios.post(`https://maker.ifttt.com/trigger/${iftttWebhookName}/with/key/${iftttWebhookKey}`, { value1: dataOfSlot }).then(() => {
+                console.log('Sent Notification to Phone \nStopping Pinger...')
+                clearInterval(timer);
+            });
         }
     }).catch((err) => {
         console.log("Error: " + err.message);
