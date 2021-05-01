@@ -13,12 +13,11 @@ Get notified on your phone when there is a vaccine slot available at your locati
 
 - Replace `<IFTTT-WEBHOOK-NAME>` with the name you used for the WebHook in IFTTT in the code.
 
+- Replace `<YOUR-AGE>` with your age.
+
+- Modify `appointmentsListLimit` value to change the number of session details you want to receive in the notification (default is 2).
+
 - Replace `<DISTRICT-ID>` with your district's id from the list.
-
-- Add your age by replacing `27` with your age.
-
-- Add the limit of appointments you want to receive inside the notification.
-
   - ### District Code in Kerala
 
     - 301: Alappuzha

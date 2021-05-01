@@ -4,11 +4,11 @@ const axios = require('axios')
 const iftttWebhookKey = '<IFTTT-KEY>' // Replace value here
 const iftttWebhookName = '<IFTTT-WEBHOOK-NAME>' // Replace value here
 const districtId = '<DISTRICT-ID>'; // Replace value here
-const yourAge = 27  //Replace age with your age.
-const appointmentsListLimit = 2 //Increase/Decrease it based on the amount of information you want in the notification.
+const yourAge = '<YOUR-AGE>'  // Replace value here
 
 
-const intervalInMs = 900000; // 15 mins interval
+const intervalInMs = 600000; // 15 mins interval (in milliseconds)
+const appointmentsListLimit = 2 // Increase/Decrease it based on the amount of information you want in the notification.
 
 function getDate() {
     const today = new Date();
@@ -30,7 +30,7 @@ function pingCowin() {
         if(centers.length) {
             centers.forEach(center => {
                 center.sessions.forEach((session => {
-                    if(session.min_age_limit < yourAge && session.available_capacity > 0) {
+                    if(session.min_age_limit < +yourAge && session.available_capacity > 0) {
                         isSlotAvailable = true
                         appointmentsAvailableCount++;
                         if(appointmentsAvailableCount <= appointmentsListLimit) {
@@ -39,6 +39,8 @@ function pingCowin() {
                     }
                 }))
             });
+
+            dataOfSlot = `${dataOfSlot}\n${appointmentsAvailableCount - appointmentsListLimit} more slots available...`
         }
         if(isSlotAvailable) {
             axios.post(`https://maker.ifttt.com/trigger/${iftttWebhookName}/with/key/${iftttWebhookKey}`, { value1: dataOfSlot }).then(() => {
