@@ -42,8 +42,8 @@ function checkParams() {
             }
 
             console.log('\nCowin Pinger started succesfully\n');
-            console.log(`IFTT API Key= ${params.key}`);
-            console.log(`IFTT Hook Name= ${params.hook}`);
+            console.log(`IFTTT API Key= ${params.key}`);
+            console.log(`IFTTT Hook Name= ${params.hook}`);
             console.log(`Age= ${params.age}`);
             console.log(`District ID= ${params.districtId}`);
             console.log(`Time interval= ${params.interval} minutes (default is 15)`);
