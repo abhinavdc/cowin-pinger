@@ -1,6 +1,8 @@
 #  COWIN VACCINE AVAILABILITY NOTIFIER
 Get notified on your phone when there is a vaccine slot available at your location, by running a script on your computer. Uses Co-Win public APIs.
 
+![Instructions-GIF](https://github.com/abhinavdc/cowin-pinger/blob/master/img/instructions.gif)
+
 ## GETTING STARTED
 ### Run cowin-pinger
 
@@ -60,5 +62,9 @@ Optional arguments accepted:
 - Add more District IDs to readme me
 - Add option for Pin Code search
 - Improve cli interface
+
+### Sample Notification on Phone
+
+![Notification-Screenshot](https://github.com/abhinavdc/cowin-pinger/blob/master/img/notification-screenshot.jpg)
 
 
