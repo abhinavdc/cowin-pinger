@@ -1,14 +1,23 @@
 {
   "name": "cowin-pinger",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.2",
+  "description": "Get notified on your phone when there is a vaccine slot available at your location, by running a script on your computer. Uses Cowin portal's public API.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Abhinav Dinesh",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "date-fns": "^2.21.1",
+    "minimist": "^1.2.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abhinavdc/cowin-pinger"
+  },
+  "bin": {
+    "cowin-pinger": "./app.js"
   }
 }
