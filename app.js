@@ -63,7 +63,7 @@ function scheduleCowinPinger(params) {
         pingCount += 1;
         pingCowin(params);
         console.log("Ping Count - ", pingCount);
-    }, params.interval * 6000);
+    }, params.interval * 60000);
 }
 
 function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date }) {
