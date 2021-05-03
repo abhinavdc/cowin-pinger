@@ -49,6 +49,37 @@ Optional arguments accepted:
   - 296: Thiruvananthapuram
   - 303: Thrissur
   - 299: Wayanad
+ 
+- ### District IDs in West Bengal
+    - 710 : Alipurduar District
+    - 711 : Bankura
+    - 712 : Basirhat HD (North 24 Parganas)
+    - 713 : Birbhum
+    - 714 : Bishnupur HD (Bankura)
+    - 715 : Cooch Behar
+    - 783 : COOCHBEHAR
+    - 716 : Dakshin Dinajpur
+    - 717 : Darjeeling
+    - 718 : Diamond Harbor HD (S 24 Parganas)
+    - 719 : East Bardhaman
+    - 720 : Hoogly
+    - 721 : Howrah
+    - 722 : Jalpaiguri
+    - 723 : Jhargram
+    - 724 : Kalimpong
+    - 725 : Kolkata
+    - 726 : Malda
+    - 727 : Murshidabad
+    - 728 : Nadia
+    - 729 : Nandigram HD (East Medinipore)
+    - 730 : North 24 Parganas
+    - 731 : Paschim Medinipore
+    - 732 : Purba Medinipore
+    - 733 : Purulia
+    - 734 : Rampurhat HD (Birbhum)
+    - 735 : South 24 Parganas
+    - 736 : Uttar Dinajpur
+    - 737 : West Bardhaman
 
 - ### Other States
   To find District ID for other states: 
