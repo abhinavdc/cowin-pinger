@@ -1,20 +1,17 @@
 #  COWIN VACCINE AVAILABILITY NOTIFIER
-Get notified on your phone when there is a vaccine slot available at your location, by running a script on your computer. Uses Co-Win public APIs.
+Get notified on your phone when there is a vaccine slot available at your location, by running a script on your computer. Uses Co-Win public APIs. 
+
+Update: Now works without IFTTT by playing a notification sound when a slot is found.
 
 ![Instructions-GIF](https://github.com/abhinavdc/cowin-pinger/blob/main/img/instructions.gif)
 
 ## GETTING STARTED
-### Run cowin-pinger
 
 Install [node](https://nodejs.org/en/download/), if not already installed. Then run the following command:
 
-    npx cowin-pinger run --key=<IFTTT-KEY> --hook=<IFTTT-WEBHOOK-NAME> --age=<YOUR-AGE> --district=<DISTRICT-ID>
+    npx cowin-pinger run --age=<YOUR-AGE> --district=<DISTRICT-ID>
 
 Replace the arguments above with the required values like mentioned below
-
-  - Replace `<IFTTT-KEY>` with your WebHook Key from IFTTT.
-
-  - Replace `<IFTTT-WEBHOOK-NAME>` with the name you used for the WebHook in IFTTT.
 
   - Replace `<YOUR-AGE>` with your age.
 
@@ -25,13 +22,22 @@ Optional arguments accepted:
   - Pass `--interval=<INTERVAL-IN-MINUTES>` to change the frequency of calling Cowin API  (default is 15 mins).
   - Pass `--appts=<APPOINTMENT-COUNT>` to specify the number of session details you want to receive in the notification (default is 2).
 
-### Setting Up IFTTT for WebHook Name and Key
+  ## IFTTT Integration (Optional)
+  By integrating with [IFTTT](https://ifttt.com/) you can recieve the notification on your phone.
+  - ### Setting Up IFTTT
 
-- Follow the steps mentioned in the [article](https://betterprogramming.pub/how-to-send-push-notifications-to-your-phone-from-any-script-6b70e34748f6) to setup IFTTT.
+    - Follow the steps mentioned in the [article](https://betterprogramming.pub/how-to-send-push-notifications-to-your-phone-from-any-script-6b70e34748f6) to setup IFTTT.
 
-- Install IFTTT App on phone to recieve notifications
+    - Install IFTTT App on phone to recieve notifications
 
-- Test if you receive notification like mentioned in the article above.
+    - Test if you receive notification like mentioned in the article above.
+  - ### Run Cowin-Pinger with IFTTT Configuration
+
+        npx cowin-pinger run --key=<IFTTT-KEY> --hook=<IFTTT-WEBHOOK-NAME> --age=<YOUR-AGE> --district=<DISTRICT-ID>
+   
+      - Replace `<IFTTT-KEY>` with your WebHook Key from IFTTT.
+
+      - Replace `<IFTTT-WEBHOOK-NAME>` with the name you used for the WebHook in IFTTT.
 
 ## <a name="district_list">District IDs</a>
 

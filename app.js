@@ -3,6 +3,9 @@ const axios = require('axios')
 const argv = require('minimist')(process.argv.slice(2));
 const { format } = require('date-fns');
 const startOfTomorrow = require('date-fns/startOfTomorrow')
+const sound = require("sound-play");
+const path = require("path");
+const notificationSound = path.join(__dirname, "sounds/beep.mp3");
 
 const defaultInterval = 15; // interval between pings in minutes
 const appointmentsListLimit = 2 // Increase/Decrease it based on the amount of information you want in the notification.
@@ -15,11 +18,14 @@ function checkParams() {
     if (argv.help) {
         console.error('Refer documentation for more details');
     } else if (argv._ && argv._.length && argv._.includes('run')) {
-        if (!argv.key || typeof argv.key !== 'string') {
-            console.error('Please provide a valid IFTTT Webook API Key by appending --key=<IFTTT-KEY> \nRefer documentation for more details');
+        if (argv.key && typeof argv.key !== 'string') {
+            console.error('Please provide a valid IFTTT Webook API Key by appending --key=<IFTTT-KEY> to recieve mobile notification \nRefer documentation for more details');
             return;
-        } else if (!argv.hook || typeof argv.hook !== 'string') {
-            console.error('Please provide a valid IFTTT Webook Name Key by appending --hook=<IFTTT-WEBHOOK-NAME> \nRefer documentation for more details');
+        } else if (argv.hook && typeof argv.hook !== 'string') {
+            console.error('Please provide a valid IFTTT Webook Name Key by appending --hook=<IFTTT-WEBHOOK-NAME> to recieve mobile notification \nRefer documentation for more details');
+            return;
+        } else if (argv.hook && !argv.key || !argv.hook && argv.key) {
+            console.error('Please provide both IFTTT Webook Name Key and IFTTT Webhook Key to recieve mobile notification \nRefer documentation for more details');
             return;
         } else if (!argv.age) {
             console.error('Please provide your age by appending --age=<YOUR-AGE> \nRefer documentation for more details');
@@ -43,13 +49,17 @@ function checkParams() {
             }
 
             console.log('\nCowin Pinger started succesfully\n');
-            console.log(`IFTTT API Key= ${params.key}`);
-            console.log(`IFTTT Hook Name= ${params.hook}`);
             console.log(`Age= ${params.age}`);
             console.log(`District ID= ${params.districtId}`);
             console.log(`Time interval= ${params.interval} minutes (default is 15)`);
-            console.log(`Appointment Count= ${params.appointmentsListLimit} (default is 2)\n\n`);
-
+            console.log(`Appointment Count= ${params.appointmentsListLimit} (default is 2)`);
+            if (params.hook && params.key) {
+                console.log(`IFTTT API Key= ${params.key || "not configured"}`);
+                console.log(`IFTTT Hook Name= ${params.hook || "not configured"}`);
+            } else {
+                console.log('\nMake sure to turn up the volume to hear the notifcation sound')
+            }
+            console.log('\n\n')
             scheduleCowinPinger(params);
         }
     } else {
@@ -89,10 +99,18 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date }) 
             dataOfSlot = `${dataOfSlot}\n${appointmentsAvailableCount - appointmentsListLimit} more slots available...`
         }
         if (isSlotAvailable) {
-            axios.post(`https://maker.ifttt.com/trigger/${hook}/with/key/${key}`, { value1: dataOfSlot }).then(() => {
-                console.log('Sent Notification to Phone \nStopping Pinger...')
+            if (hook && key) {
+                axios.post(`https://maker.ifttt.com/trigger/${hook}/with/key/${key}`, { value1: dataOfSlot }).then(() => {
+                    console.log('Sent Notification to Phone \nStopping Pinger...')
+                    sound.play(notificationSound);
+                    clearInterval(timer);
+                });
+            } else {
+                console.log(dataOfSlot);
+                console.log('Slots found\nStopping Pinger...')
+                sound.play(notificationSound);
                 clearInterval(timer);
-            });
+            }
         }
     }).catch((err) => {
         console.log("Error: " + err.message);
