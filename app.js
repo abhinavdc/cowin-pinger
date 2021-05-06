@@ -7,6 +7,7 @@ const startOfTomorrow = require('date-fns/startOfTomorrow')
 const defaultInterval = 15; // interval between pings in minutes
 const appointmentsListLimit = 2 // Increase/Decrease it based on the amount of information you want in the notification.
 let timer = null;
+const sampleUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
 
 checkParams();
 
@@ -67,7 +68,7 @@ function scheduleCowinPinger(params) {
 }
 
 function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date }) {
-    axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${date}`).then((result) => {
+    axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${date}`, { headers: { 'User-Agent': sampleUserAgent }}).then((result) => {
         const { centers } = result.data;
         let isSlotAvailable = false;
         let dataOfSlot = "";
