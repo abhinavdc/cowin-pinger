@@ -96,7 +96,9 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date }) 
                 }))
             });
 
-            dataOfSlot = `${dataOfSlot}\n${appointmentsAvailableCount - appointmentsListLimit} more slots available...`
+            if (appointmentsAvailableCount - appointmentsListLimit) {
+                dataOfSlot = `${dataOfSlot}\n${appointmentsAvailableCount - appointmentsListLimit} more slots available...`
+            }
         }
         if (isSlotAvailable) {
             if (hook && key) {
