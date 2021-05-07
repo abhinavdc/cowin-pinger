@@ -78,7 +78,7 @@ function scheduleCowinPinger(params) {
 }
 
 function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date }) {
-    axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${date}`, { headers: { 'User-Agent': sampleUserAgent }}).then((result) => {
+    axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${date}`, { headers: { 'User-Agent': sampleUserAgent } }).then((result) => {
         const { centers } = result.data;
         let isSlotAvailable = false;
         let dataOfSlot = "";
