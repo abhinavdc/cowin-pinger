@@ -82,7 +82,7 @@ function scheduleCowinPinger(params) {
 function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pin }) {
     let url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${date}`
     if (pin) {
-        url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?pincode=${pin}&date=${date}`
+        url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=${pin}&date=${date}`
     }
     axios.get(url, { headers: { 'User-Agent': sampleUserAgent } }).then((result) => {
         const { centers } = result.data;
