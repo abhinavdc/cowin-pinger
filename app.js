@@ -30,7 +30,7 @@ function checkParams() {
         } else if (!argv.age) {
             console.error('Please provide your age by appending --age=<YOUR-AGE> \nRefer documentation for more details');
             return;
-        } else if (!argv.district) {
+        } else if (!argv.district && !argv.pin) {
             console.error('Please provide required district id by appending --district=<DISTRICT-ID> \nRefer documentation for more details');
             return;
         } else if (argv.interval && argv.interval < 5) {
@@ -45,12 +45,14 @@ function checkParams() {
                 districtId: argv.district,
                 interval: argv.interval || defaultInterval,
                 appointmentsListLimit: argv.appts || appointmentsListLimit,
-                date: format(startOfTomorrow(), 'dd-MM-yyyy')
+                date: format(startOfTomorrow(), 'dd-MM-yyyy'),
+                pin: argv.pin
             }
 
             console.log('\nCowin Pinger started succesfully\n');
             console.log(`Age= ${params.age}`);
             console.log(`District ID= ${params.districtId}`);
+            console.log(`Pin Code= ${params.pin}`);
             console.log(`Time interval= ${params.interval} minutes (default is 15)`);
             console.log(`Appointment Count= ${params.appointmentsListLimit} (default is 2)`);
             if (params.hook && params.key) {
@@ -77,8 +79,12 @@ function scheduleCowinPinger(params) {
     }, params.interval * 60000);
 }
 
-function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date }) {
-    axios.get(`https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${date}`, { headers: { 'User-Agent': sampleUserAgent } }).then((result) => {
+function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pin }) {
+    let url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${date}`
+    if (pin) {
+        url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=${pin}&date=${date}`
+    }
+    axios.get(url, { headers: { 'User-Agent': sampleUserAgent } }).then((result) => {
         const { centers } = result.data;
         let isSlotAvailable = false;
         let dataOfSlot = "";
