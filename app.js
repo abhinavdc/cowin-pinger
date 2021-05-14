@@ -31,7 +31,10 @@ function checkParams() {
             console.error('Please provide your age by appending --age=<YOUR-AGE> \nRefer documentation for more details');
             return;
         } else if (!argv.district && !argv.pin) {
-            console.error('Please provide required district id by appending --district=<DISTRICT-ID> \nRefer documentation for more details');
+            console.error('Please provide either district-id or pincode by appending --district=<DISTRICT-ID> or --pin=<PINCODE> \nRefer documentation for more details');
+            return;
+        } else if (argv.pin && argv.pin.toString().length !== 6) {
+            console.error('Pincode must be a 6 digit number \nRefer documentation for more details');
             return;
         } else if (argv.interval && argv.interval < 5) {
             console.error('Please provide an interval greater than 5 minutes');

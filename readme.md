@@ -15,15 +15,17 @@ Replace the arguments above with the required values like mentioned below
 
   - Replace `<YOUR-AGE>` with your age.
 
-Not required if used --pin
   - Replace `<DISTRICT-ID>` with your district's id from this [list](#district_list).
 
 Optional arguments accepted:
 
   - Pass `--interval=<INTERVAL-IN-MINUTES>` to change the frequency of calling Cowin API  (default is 15 mins).
   - Pass `--appts=<APPOINTMENT-COUNT>` to specify the number of session details you want to receive in the notification (default is 2).
-  - Pass `--pin=<YOUR-AREA-PIN-CODE>` to get only notification about your pin code.
+  - Pass `--pin=<YOUR-AREA-PIN-CODE>` to search for availabe slots based on pin code. (`<DISTRICT-ID>` is not required and will be ignored if searching by PIN)
 
+  (Note: Search by District is recommended as searching by PINCODE will have lower chances of finding a slot)
+
+  
   ## IFTTT Integration (Optional)
   By integrating with [IFTTT](https://ifttt.com/) you can recieve the notification on your phone.
   - ### Setting Up IFTTT
