@@ -126,7 +126,7 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
             } else {
                 console.log(dataOfSlot);
                 console.log('Slots found\nStopping Pinger...')
-                sound.play(notificationSound);
+                sound.play(notificationSound, 1);
                 clearInterval(timer);
             }
         }
