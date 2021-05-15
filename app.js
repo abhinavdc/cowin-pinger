@@ -5,7 +5,7 @@ const { format } = require('date-fns');
 const isMatch = require('date-fns/isMatch')
 const sound = require("sound-play");
 const path = require("path");
-const notificationSound = path.join(__dirname, "sounds/beep.mp3");
+const notificationSound = path.join(__dirname, "sounds/beep.wav");
 
 const defaultInterval = 15; // interval between pings in minutes
 const appointmentsListLimit = 2 // Increase/Decrease it based on the amount of information you want in the notification.
