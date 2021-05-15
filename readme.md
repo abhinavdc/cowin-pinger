@@ -21,6 +21,7 @@ Optional arguments accepted:
 
   - Pass `--interval=<INTERVAL-IN-MINUTES>` to change the frequency of calling Cowin API  (default is 15 mins).
   - Pass `--appts=<APPOINTMENT-COUNT>` to specify the number of session details you want to receive in the notification (default is 2).
+  - Pass `--date=<DATE>` to search for slots after a particular date. Date must be in dd-mm-yyyy format  (default is today's date).
   - Pass `--pin=<YOUR-AREA-PIN-CODE>` to search for availabe slots based on pin code. (`<DISTRICT-ID>` is not required and will be ignored if searching by PIN)
 
   (Note: Search by District is recommended as searching by PINCODE will have lower chances of finding a slot)

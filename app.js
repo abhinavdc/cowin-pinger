@@ -2,7 +2,7 @@
 const axios = require('axios')
 const argv = require('minimist')(process.argv.slice(2));
 const { format } = require('date-fns');
-const startOfTomorrow = require('date-fns/startOfTomorrow')
+const isMatch = require('date-fns/isMatch')
 const sound = require("sound-play");
 const path = require("path");
 const notificationSound = path.join(__dirname, "sounds/beep.mp3");
@@ -39,6 +39,9 @@ function checkParams() {
         } else if (argv.interval && argv.interval < 5) {
             console.error('Please provide an interval greater than 5 minutes');
             return;
+        } else if (argv.date && !isMatch(argv.date, 'dd-MM-yyyy')) {
+            console.error('Please provide date in dd-mm-yyyy format');
+            return;
         } else {
             // Required arguments provided through cli and checks passed
             const params = {
@@ -48,14 +51,18 @@ function checkParams() {
                 districtId: argv.district,
                 interval: argv.interval || defaultInterval,
                 appointmentsListLimit: argv.appts || appointmentsListLimit,
-                date: format(startOfTomorrow(), 'dd-MM-yyyy'),
+                date: argv.date || format(new Date(), 'dd-MM-yyyy'),
                 pin: argv.pin
             }
 
             console.log('\nCowin Pinger started succesfully\n');
+            console.log(`Date= ${params.date}`);
             console.log(`Age= ${params.age}`);
-            console.log(`District ID= ${params.districtId}`);
-            console.log(`Pin Code= ${params.pin}`);
+            if (params.pin) {
+                console.log(`Pincode= ${params.pin}`);
+            } else {
+                console.log(`District ID= ${params.districtId}`);
+            }
             console.log(`Time interval= ${params.interval} minutes (default is 15)`);
             console.log(`Appointment Count= ${params.appointmentsListLimit} (default is 2)`);
             if (params.hook && params.key) {
