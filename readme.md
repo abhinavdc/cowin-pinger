@@ -1000,7 +1000,6 @@ Optional arguments accepted:
 </details>
 
 ## Developer Todo 
-- Add option for Pin Code search
 - Improve cli interface
 
 ### Sample Notification on Phone
