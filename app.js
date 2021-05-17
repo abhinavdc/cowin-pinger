@@ -118,13 +118,13 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
                 center.sessions.forEach((session => {
                     if (session.min_age_limit < +age && session.available_capacity > 0) {
                         if(slot === 'dose1' && session.available_capacity_dose1 <= 0){
-                            continue;
+                            return;
                         }
                         if(slot === 'dose2' && session.available_capacity_dose2 <= 0){
-                            continue;
+                            return;
                         }
                         if(vaccine && vaccine !== session.vaccine) {
-                            continue;
+                            return;
                         }
                         isSlotAvailable = true
                         appointmentsAvailableCount++;
