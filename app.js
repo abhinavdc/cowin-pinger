@@ -44,7 +44,7 @@ function checkParams() {
         } else if (argv.date && !isMatch(argv.date, 'dd-MM-yyyy')) {
             console.error('Please provide date in dd-mm-yyyy format');
             return;
-        } else if (!argv.slot) {
+        } else if (!argv.slot || (argv.slot && argv.slot !== 'dose1' && argv.slot !== 'dose2')) {
             console.error('Please provide slot param as dose1 or dose2');
             return;
         } 
@@ -57,8 +57,8 @@ function checkParams() {
             // vaccine = COVISHIELD , COVAXIN
             // slot = dose1, dose2
             const params = {
-                vaccine: argv.vaccine || null, 
-                slot: argv.slot || 'dose2', 
+                vaccine: argv.vaccine, 
+                slot: argv.slot, 
                 key: argv.key,
                 hook: argv.hook,
                 age: argv.age,
