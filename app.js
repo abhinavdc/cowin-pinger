@@ -17,7 +17,8 @@ checkParams();
 function checkParams() {
     if (argv.help) {
         console.error('Refer documentation for more details');
-    } else if (argv._ && argv._.length && argv._.includes('run')) {
+    } else if (argv._) {
+        console.log(argv);
         if (argv.key && typeof argv.key !== 'string') {
             console.error('Please provide a valid IFTTT Webook API Key by appending --key=<IFTTT-KEY> to recieve mobile notification \nRefer documentation for more details');
             return;
@@ -36,15 +37,28 @@ function checkParams() {
         } else if (argv.pin && argv.pin.toString().length !== 6) {
             console.error('Pincode must be a 6 digit number \nRefer documentation for more details');
             return;
-        } else if (argv.interval && argv.interval < 5) {
-            console.error('Please provide an interval greater than 5 minutes');
+        } else if (argv.interval && argv.interval < 1) {
+            // these APIs are subject to a rate limit of 100 API calls per 5 minutes per IP
+            console.error('Please provide an interval greater than equal to 2 minutes');
             return;
         } else if (argv.date && !isMatch(argv.date, 'dd-MM-yyyy')) {
             console.error('Please provide date in dd-mm-yyyy format');
             return;
-        } else {
+        } else if (!argv.slot) {
+            console.error('Please provide slot param as dose1 or dose2');
+            return;
+        } 
+        else if (argv.vaccine && argv.vaccine !== 'COVISHIELD' && argv.vaccine !== 'COVAXIN') {
+            console.error('Please provide vaccine param as COVAXIN or COVISHIELD');
+            return;
+        } 
+        else {
             // Required arguments provided through cli and checks passed
+            // vaccine = COVISHIELD , COVAXIN
+            // slot = dose1, dose2
             const params = {
+                vaccine: argv.vaccine || null, 
+                slot: argv.slot || 'dose2', 
                 key: argv.key,
                 hook: argv.hook,
                 age: argv.age,
@@ -89,7 +103,7 @@ function scheduleCowinPinger(params) {
     }, params.interval * 60000);
 }
 
-function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pin }) {
+function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pin, vaccine, slot }) {
     let url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=${districtId}&date=${date}`
     if (pin) {
         url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=${pin}&date=${date}`
@@ -103,6 +117,15 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
             centers.forEach(center => {
                 center.sessions.forEach((session => {
                     if (session.min_age_limit < +age && session.available_capacity > 0) {
+                        if(slot === 'dose1' && session.available_capacity_dose1 <= 0){
+                            continue;
+                        }
+                        if(slot === 'dose2' && session.available_capacity_dose2 <= 0){
+                            continue;
+                        }
+                        if(vaccine && vaccine !== session.vaccine) {
+                            continue;
+                        }
                         isSlotAvailable = true
                         appointmentsAvailableCount++;
                         if (appointmentsAvailableCount <= appointmentsListLimit) {
@@ -117,6 +140,7 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
             }
         }
         if (isSlotAvailable) {
+            console.log(Json.stringify(dataOfSlot));
             if (hook && key) {
                 axios.post(`https://maker.ifttt.com/trigger/${hook}/with/key/${key}`, { value1: dataOfSlot }).then(() => {
                     console.log('Sent Notification to Phone \nStopping Pinger...')
@@ -124,7 +148,6 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
                     clearInterval(timer);
                 });
             } else {
-                console.log(dataOfSlot);
                 console.log('Slots found\nStopping Pinger...')
                 sound.play(notificationSound, 1);
                 clearInterval(timer);
