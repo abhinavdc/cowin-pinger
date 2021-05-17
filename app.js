@@ -17,7 +17,7 @@ checkParams();
 function checkParams() {
     if (argv.help) {
         console.error('Refer documentation for more details');
-    } else if (argv._) {
+    } else if (argv._ && argv._.length && argv._.includes('run')) {
         console.log(argv);
         if (argv.key && typeof argv.key !== 'string') {
             console.error('Please provide a valid IFTTT Webook API Key by appending --key=<IFTTT-KEY> to recieve mobile notification \nRefer documentation for more details');
