@@ -9,7 +9,7 @@ Update: Now works without IFTTT by playing a notification sound when a slot is f
 
 Install [node](https://nodejs.org/en/download/), if not already installed. Then run the following command:
 
-    npx cowin-pinger run --age=<YOUR-AGE> --district=<DISTRICT-ID>
+    npx cowin-pinger run --age=<YOUR-AGE> --district=<DISTRICT-ID> --dose=<DOSE-NO>
 
 Replace the arguments above with the required values like mentioned below
 
@@ -17,11 +17,14 @@ Replace the arguments above with the required values like mentioned below
 
   - Replace `<DISTRICT-ID>` with your district's id from this [list](#district_list).
 
+  - Replace `<DOSE-NO>` with either 1 or 2 for first dose and second dose respectively.
+
 Optional arguments accepted:
 
-  - Pass `--interval=<INTERVAL-IN-MINUTES>` to change the frequency of calling Cowin API  (default is 15 mins).
-  - Pass `--appts=<APPOINTMENT-COUNT>` to specify the number of session details you want to receive in the notification (default is 2).
+  - Pass `--vaccine=<VACCINE-NAME>` to search for specific vaccine. Accepted values are `COVISHIELD` and `COVAXIN`.
+  - Pass `--interval=<INTERVAL-IN-MINUTES>` to change the frequency of calling Cowin API  (default is 10 mins).
   - Pass `--date=<DATE>` to search for slots after a particular date. Date must be in dd-mm-yyyy format  (default is today's date).
+  - Pass `--appts=<APPOINTMENT-COUNT>` to specify the number of session details you want to receive in the notification (default is 2).
   - Pass `--pin=<YOUR-AREA-PIN-CODE>` to search for availabe slots based on pin code. (`<DISTRICT-ID>` is not required and will be ignored if searching by PIN)
 
   (Note: Search by District is recommended as searching by PINCODE will have lower chances of finding a slot)
