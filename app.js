@@ -69,7 +69,7 @@ function checkParams() {
                 console.log(`IFTTT API Key= ${params.key || "not configured"}`);
                 console.log(`IFTTT Hook Name= ${params.hook || "not configured"}`);
             } else {
-                console.log('\nMake sure to turn up the volume to hear the notifcation sound')
+                console.log('\nMake sure to turn up the volume to hear the notification sound')
             }
             console.log('\n\n')
             scheduleCowinPinger(params);
