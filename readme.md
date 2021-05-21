@@ -1003,7 +1003,7 @@ Optional arguments accepted:
 </details>
 
 ## Developer Todo 
-- Improve cli interface
+- Option to read config from a local file instead of cli args 
 
 ### Sample Notification on Phone
 
