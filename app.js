@@ -30,6 +30,9 @@ function checkParams() {
         } else if (!argv.age) {
             console.error('Please provide your age by appending --age=<YOUR-AGE> \nRefer documentation for more details');
             return;
+        } else if (argv.age && argv.age < 18) {
+            console.error('Please provide an age greater than or equal to 18');
+            return;
         } else if (!argv.district && !argv.pin) {
             console.error('Please provide either district-id or pincode by appending --district=<DISTRICT-ID> or --pin=<PINCODE> \nRefer documentation for more details');
             return;
@@ -106,6 +109,8 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
 
     let url = pin ? `${baseUrl}calendarByPin?pincode=${pin}&date=${date}` : `${baseUrl}calendarByDistrict?district_id=${districtId}&date=${date}`
 
+    const ageLimit = age >= 18 && age < 45 ? 18 : 45;
+
     axios.get(url, { headers: { 'User-Agent': sampleUserAgent } }).then((result) => {
         const { centers } = result.data;
         let isSlotAvailable = false;
@@ -114,7 +119,7 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
         if (centers.length) {
             centers.forEach(center => {
                 center.sessions.forEach((session => {
-                    if (session.min_age_limit <= +age && session.available_capacity > 0) {
+                    if (session.min_age_limit === ageLimit && session.available_capacity > 0) {
                         if(dose === 1 && session.available_capacity_dose1 <= 0){
                             return;
                         }
@@ -140,11 +145,13 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
         if (isSlotAvailable) {
             if (hook && key) {
                 axios.post(`https://maker.ifttt.com/trigger/${hook}/with/key/${key}`, { value1: dataOfSlot }).then(() => {
+                    console.log(dataOfSlot);
                     console.log('Sent Notification to Phone \nStopping Pinger...')
                     sound.play(notificationSound);
                     clearInterval(timer);
                 });
             } else {
+                console.log(dataOfSlot);
                 console.log('Slots found\nStopping Pinger...')
                 sound.play(notificationSound, 1);
                 clearInterval(timer);
