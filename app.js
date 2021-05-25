@@ -105,7 +105,7 @@ function scheduleCowinPinger(params) {
 }
 
 function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pin, vaccine, dose }) {
-    const baseUrl = 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/'
+    const baseUrl = 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/'
 
     let url = pin ? `${baseUrl}calendarByPin?pincode=${pin}&date=${date}` : `${baseUrl}calendarByDistrict?district_id=${districtId}&date=${date}`
 
