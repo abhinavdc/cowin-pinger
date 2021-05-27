@@ -9,6 +9,7 @@ const notificationSound = path.join(__dirname, "sounds/beep.wav");
 
 const defaultInterval = 10; // interval between pings in minutes
 const appointmentsListLimit = 2 // Increase/Decrease it based on the amount of information you want in the notification.
+const defaultKeepAlive = false;
 let timer = null;
 const sampleUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
 
@@ -49,12 +50,16 @@ function checkParams() {
         } else if (!argv.dose || (argv.dose && argv.dose !== 1 && argv.dose !== 2)) {
             console.error('Please mention if your require first dose or second dose by passing --dose=1 or --dose=2 \n');
             return;
-        } 
+        }
         else if ((argv.vaccine && typeof argv.vaccine !== 'string') || (argv.vaccine && argv.vaccine.toLowerCase() !== 'covishield' && argv.vaccine.toLowerCase() !== 'covaxin')) {
             console.error('Please provide vaccine param as COVAXIN or COVISHIELD');
             return;
-        } 
-        else {            
+        }
+        else if ((argv['keep-alive'] && typeof argv['keep-alive'] !== 'string') && (argv['keep-alive'].toLowerCase() !== 'true' && argv['keep-alive'].toLowerCase() !== 'false')) {
+            console.error('Please set keep-alive param as true or false');
+            return;
+        }
+        else {
             const params = {
                 vaccine: argv.vaccine, // vaccine = COVISHIELD , COVAXIN
                 dose: argv.dose, // dose = 1, 2
@@ -65,7 +70,8 @@ function checkParams() {
                 interval: argv.interval || defaultInterval,
                 appointmentsListLimit: argv.appts || appointmentsListLimit,
                 date: argv.date || format(new Date(), 'dd-MM-yyyy'),
-                pin: argv.pin
+                pin: argv.pin,
+                keepAlive: argv['keep-alive'] ? argv['keep-alive'].toLowerCase() === 'true' : defaultKeepAlive
             }
 
             console.log('\nCowin Pinger started succesfully\n');
@@ -104,7 +110,7 @@ function scheduleCowinPinger(params) {
     }, params.interval * 60000);
 }
 
-function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pin, vaccine, dose }) {
+function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pin, vaccine, dose, keepAlive }) {
     const baseUrl = 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/'
 
     let url = pin ? `${baseUrl}calendarByPin?pincode=${pin}&date=${date}` : `${baseUrl}calendarByDistrict?district_id=${districtId}&date=${date}`
@@ -120,13 +126,13 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
             centers.forEach(center => {
                 center.sessions.forEach((session => {
                     if (session.min_age_limit === ageLimit && session.available_capacity > 0) {
-                        if(dose === 1 && session.available_capacity_dose1 <= 0){
+                        if (dose === 1 && session.available_capacity_dose1 <= 0) {
                             return;
                         }
-                        if(dose === 2 && session.available_capacity_dose2 <= 0){
+                        if (dose === 2 && session.available_capacity_dose2 <= 0) {
                             return;
                         }
-                        if(vaccine && vaccine.toLowerCase() !== session.vaccine.toLowerCase()) {
+                        if (vaccine && vaccine.toLowerCase() !== session.vaccine.toLowerCase()) {
                             return;
                         }
                         isSlotAvailable = true
@@ -146,15 +152,21 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
             if (hook && key) {
                 axios.post(`https://maker.ifttt.com/trigger/${hook}/with/key/${key}`, { value1: dataOfSlot }).then(() => {
                     console.log(dataOfSlot);
-                    console.log('Sent Notification to Phone \nStopping Pinger...')
                     sound.play(notificationSound);
-                    clearInterval(timer);
+                    console.log('Sent Notification to Phone')
+                    if (!keepAlive) {
+                        console.log('Stopping Pinger...')
+                        clearInterval(timer);
+                    }
                 });
             } else {
                 console.log(dataOfSlot);
-                console.log('Slots found\nStopping Pinger...')
                 sound.play(notificationSound, 1);
-                clearInterval(timer);
+                console.log('Slots found')
+                if (!keepAlive) {
+                    console.log('Stopping Pinger...')
+                    clearInterval(timer);
+                }
             }
         }
     }).catch((err) => {
