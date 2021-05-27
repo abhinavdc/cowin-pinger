@@ -49,12 +49,16 @@ function checkParams() {
         } else if (!argv.dose || (argv.dose && argv.dose !== 1 && argv.dose !== 2)) {
             console.error('Please mention if your require first dose or second dose by passing --dose=1 or --dose=2 \n');
             return;
-        } 
+        }
         else if ((argv.vaccine && typeof argv.vaccine !== 'string') || (argv.vaccine && argv.vaccine.toLowerCase() !== 'covishield' && argv.vaccine.toLowerCase() !== 'covaxin')) {
             console.error('Please provide vaccine param as COVAXIN or COVISHIELD');
             return;
-        } 
-        else {            
+        }
+        else if ((argv['keep-alive'] && typeof argv['keep-alive'] !== 'string') && (argv['keep-alive'].toLowerCase() !== 'true' && argv['keep-alive'].toLowerCase() !== 'false')) {
+            console.error('Please set keep-alive param as true or false');
+            return;
+        }
+        else {
             const params = {
                 vaccine: argv.vaccine, // vaccine = COVISHIELD , COVAXIN
                 dose: argv.dose, // dose = 1, 2
@@ -65,7 +69,8 @@ function checkParams() {
                 interval: argv.interval || defaultInterval,
                 appointmentsListLimit: argv.appts || appointmentsListLimit,
                 date: argv.date || format(new Date(), 'dd-MM-yyyy'),
-                pin: argv.pin
+                pin: argv.pin,
+                keepAlive: argv['keep-alive'].toLowerCase() === 'true'
             }
 
             console.log('\nCowin Pinger started succesfully\n');
@@ -120,13 +125,13 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
             centers.forEach(center => {
                 center.sessions.forEach((session => {
                     if (session.min_age_limit === ageLimit && session.available_capacity > 0) {
-                        if(dose === 1 && session.available_capacity_dose1 <= 0){
+                        if (dose === 1 && session.available_capacity_dose1 <= 0) {
                             return;
                         }
-                        if(dose === 2 && session.available_capacity_dose2 <= 0){
+                        if (dose === 2 && session.available_capacity_dose2 <= 0) {
                             return;
                         }
-                        if(vaccine && vaccine.toLowerCase() !== session.vaccine.toLowerCase()) {
+                        if (vaccine && vaccine.toLowerCase() !== session.vaccine.toLowerCase()) {
                             return;
                         }
                         isSlotAvailable = true
