@@ -6,9 +6,11 @@ const isMatch = require('date-fns/isMatch')
 const sound = require("sound-play");
 const path = require("path");
 const notificationSound = path.join(__dirname, "sounds/beep.wav");
+const keepAliveNotificationSound = path.join(__dirname, "sounds/short-beep.wav")
 
 const defaultInterval = 10; // interval between pings in minutes
 const appointmentsListLimit = 2 // Increase/Decrease it based on the amount of information you want in the notification.
+const defaultKeepAlive = false;
 let timer = null;
 const sampleUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
 
@@ -70,7 +72,7 @@ function checkParams() {
                 appointmentsListLimit: argv.appts || appointmentsListLimit,
                 date: argv.date || format(new Date(), 'dd-MM-yyyy'),
                 pin: argv.pin,
-                keepAlive: argv['keep-alive'].toLowerCase() === 'true'
+                keepAlive: argv['keep-alive'] ? argv['keep-alive'].toLowerCase() === 'true' : defaultKeepAlive
             }
 
             console.log('\nCowin Pinger started succesfully\n');
@@ -109,7 +111,7 @@ function scheduleCowinPinger(params) {
     }, params.interval * 60000);
 }
 
-function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pin, vaccine, dose }) {
+function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pin, vaccine, dose, keepAlive }) {
     const baseUrl = 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/'
 
     let url = pin ? `${baseUrl}calendarByPin?pincode=${pin}&date=${date}` : `${baseUrl}calendarByDistrict?district_id=${districtId}&date=${date}`
@@ -151,15 +153,25 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
             if (hook && key) {
                 axios.post(`https://maker.ifttt.com/trigger/${hook}/with/key/${key}`, { value1: dataOfSlot }).then(() => {
                     console.log(dataOfSlot);
-                    console.log('Sent Notification to Phone \nStopping Pinger...')
-                    sound.play(notificationSound);
-                    clearInterval(timer);
+                    if (keepAlive) {
+                        console.log('Sent Notification to Phone')
+                        sound.play(keepAliveNotificationSound);
+                    } else {
+                        console.log('Sent Notification to Phone \nStopping Pinger...')
+                        sound.play(notificationSound);
+                        clearInterval(timer);
+                    }
                 });
             } else {
                 console.log(dataOfSlot);
-                console.log('Slots found\nStopping Pinger...')
-                sound.play(notificationSound, 1);
-                clearInterval(timer);
+                if (keepAlive) {
+                    console.log('Slots found')
+                    sound.play(keepAliveNotificationSound, .8);
+                } else {
+                    console.log('Slots found\nStopping Pinger...')
+                    sound.play(notificationSound, 1);
+                    clearInterval(timer);
+                }
             }
         }
     }).catch((err) => {
