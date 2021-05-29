@@ -138,7 +138,7 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
                         isSlotAvailable = true
                         appointmentsAvailableCount++;
                         if (appointmentsAvailableCount <= appointmentsListLimit) {
-                            dataOfSlot = `${dataOfSlot}\nSlot for ${session.available_capacity} is available: ${center.name} on ${session.date}`;
+                            dataOfSlot = `${dataOfSlot}\n[${center.pincode}] - Slot for ${session.available_capacity} is available: ${center.name} on ${session.date}`;
                         }
                     }
                 }))
