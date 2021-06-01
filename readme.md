@@ -33,6 +33,7 @@ Optional arguments accepted:
   
   ## IFTTT Integration (Optional)
   By integrating with [IFTTT](https://ifttt.com/) you can recieve the notification on your phone.
+  Wondering what IFTTT is ? Read here - [#21](https://github.com/abhinavdc/cowin-pinger/issues/21)
   - ### Setting Up IFTTT
 
     - Follow the steps mentioned in the [article](https://betterprogramming.pub/how-to-send-push-notifications-to-your-phone-from-any-script-6b70e34748f6) to setup IFTTT.
