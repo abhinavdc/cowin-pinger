@@ -51,7 +51,7 @@ function checkParams() {
             console.error('Please mention if your require first dose or second dose by passing --dose=1 or --dose=2 \n');
             return;
         }
-        else if ((argv.vaccine && typeof argv.vaccine !== 'string') || (argv.vaccine && argv.vaccine.toLowerCase() !== 'covishield' && argv.vaccine.toLowerCase() !== 'covaxin' && argv.vaccine.toLowerCase() !== 'sputnik V'))  {
+        else if ((argv.vaccine && typeof argv.vaccine !== 'string') || (argv.vaccine && argv.vaccine.toLowerCase() !== 'covishield' && argv.vaccine.toLowerCase() !== 'covaxin' && argv.vaccine.toLowerCase() !== 'sputnik v'))  {
             console.error('Please provide vaccine param as COVAXIN or COVISHIELD or SPUTNIK V');
             return;
         }
