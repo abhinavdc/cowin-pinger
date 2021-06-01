@@ -21,7 +21,7 @@ Replace the arguments above with the required values like mentioned below
 
 Optional arguments accepted:
 
-  - Pass `--vaccine=<VACCINE-NAME>` to search for specific vaccine. Accepted values are `COVISHIELD` and `COVAXIN`.
+  - Pass `--vaccine=<VACCINE-NAME>` to search for specific vaccine. Accepted values are `COVISHIELD`, `COVAXIN` and `SPUTNIK`.
   - Pass `--interval=<INTERVAL-IN-MINUTES>` to change the frequency of calling Cowin API  (default is 10 mins).
   - Pass `--date=<DATE>` to search for slots after a particular date. Date must be in dd-mm-yyyy format  (default is today's date).
   - Pass `--appts=<APPOINTMENT-COUNT>` to specify the number of session details you want to receive in the notification (default is 2).
