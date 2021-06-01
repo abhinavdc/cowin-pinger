@@ -51,8 +51,8 @@ function checkParams() {
             console.error('Please mention if your require first dose or second dose by passing --dose=1 or --dose=2 \n');
             return;
         }
-        else if ((argv.vaccine && typeof argv.vaccine !== 'string') || (argv.vaccine && argv.vaccine.toLowerCase() !== 'covishield' && argv.vaccine.toLowerCase() !== 'covaxin')) {
-            console.error('Please provide vaccine param as COVAXIN or COVISHIELD');
+        else if ((argv.vaccine && typeof argv.vaccine !== 'string') || (argv.vaccine && argv.vaccine.toLowerCase() !== 'covishield' && argv.vaccine.toLowerCase() !== 'covaxin' && argv.vaccine.toLowerCase() !== 'sputnik V'))  {
+            console.error('Please provide vaccine param as COVAXIN or COVISHIELD or SPUTNIK V');
             return;
         }
         else if ((argv['keep-alive'] && typeof argv['keep-alive'] !== 'string') && (argv['keep-alive'].toLowerCase() !== 'true' && argv['keep-alive'].toLowerCase() !== 'false')) {
@@ -61,7 +61,7 @@ function checkParams() {
         }
         else {
             const params = {
-                vaccine: argv.vaccine, // vaccine = COVISHIELD , COVAXIN
+                vaccine: argv.vaccine, // vaccine = COVISHIELD , COVAXIN, SPUTNIK V
                 dose: argv.dose, // dose = 1, 2
                 key: argv.key,
                 hook: argv.hook,
