@@ -12,6 +12,7 @@ const appointmentsListLimit = 2 // Increase/Decrease it based on the amount of i
 const defaultKeepAlive = false;
 let timer = null;
 const sampleUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+const baseUrl = 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/'
 
 checkParams();
 
@@ -51,8 +52,8 @@ function checkParams() {
             console.error('Please mention if your require first dose or second dose by passing --dose=1 or --dose=2 \n');
             return;
         }
-        else if ((argv.vaccine && typeof argv.vaccine !== 'string') || (argv.vaccine && argv.vaccine.toLowerCase() !== 'covishield' && argv.vaccine.toLowerCase() !== 'covaxin' && argv.vaccine.toLowerCase() !== 'sputnik v'))  {
-            console.error('Please provide vaccine param as COVAXIN or COVISHIELD or SPUTNIK V');
+        else if ((argv.vaccine && typeof argv.vaccine !== 'string') || (argv.vaccine && argv.vaccine.toLowerCase() !== 'covishield' && argv.vaccine.toLowerCase() !== 'covaxin' && argv.vaccine.toLowerCase() !== 'sputnik' )) {
+            console.error('Please provide vaccine param as COVAXIN or COVISHIELD or SPUTNIK');
             return;
         }
         else if ((argv['keep-alive'] && typeof argv['keep-alive'] !== 'string') && (argv['keep-alive'].toLowerCase() !== 'true' && argv['keep-alive'].toLowerCase() !== 'false')) {
@@ -61,7 +62,7 @@ function checkParams() {
         }
         else {
             const params = {
-                vaccine: argv.vaccine, // vaccine = COVISHIELD , COVAXIN, SPUTNIK V
+                vaccine: argv.vaccine === 'spuntik' ? argv.vaccine + ' v' : argv.vaccine, // vaccine = COVISHIELD , COVAXIN, SPUTNIK
                 dose: argv.dose, // dose = 1, 2
                 key: argv.key,
                 hook: argv.hook,
@@ -69,13 +70,13 @@ function checkParams() {
                 districtId: argv.district,
                 interval: argv.interval || defaultInterval,
                 appointmentsListLimit: argv.appts || appointmentsListLimit,
-                date: argv.date || format(new Date(), 'dd-MM-yyyy'),
+                date: argv.date,
                 pin: argv.pin,
                 keepAlive: argv['keep-alive'] ? argv['keep-alive'].toLowerCase() === 'true' : defaultKeepAlive
             }
 
             console.log('\nCowin Pinger started succesfully\n');
-            console.log(`Date= ${params.date}`);
+            console.log(`Date= ${params.date || format(new Date(), 'dd-MM-yyyy')}`);
             console.log(`Age= ${params.age}`);
             console.log(`Dose= ${params.dose === 1 ? 'First Dose' : 'Second Dose'}`);
             params.vaccine && console.log(`Vaccine= ${params.vaccine.toUpperCase()}`);
@@ -111,7 +112,8 @@ function scheduleCowinPinger(params) {
 }
 
 function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pin, vaccine, dose, keepAlive }) {
-    const baseUrl = 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/'
+    // get current date on every iteration if not custom date
+    date = date || format(new Date(), 'dd-MM-yyyy')
 
     let url = pin ? `${baseUrl}calendarByPin?pincode=${pin}&date=${date}` : `${baseUrl}calendarByDistrict?district_id=${districtId}&date=${date}`
 
