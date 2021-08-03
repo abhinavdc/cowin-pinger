@@ -126,6 +126,8 @@ function checkParams() {
       console.log(`Age= ${params.age}`);
       console.log(`Dose= ${params.dose === 1 ? "First Dose" : "Second Dose"}`);
       params.vaccine && console.log(`Vaccine= ${params.vaccine.toUpperCase()}`);
+      params.centreType &&
+        console.log(`Centre Type= ${params.centreType.toUpperCase()}`);
       if (params.pin) {
         console.log(`Pincode= ${params.pin}`);
       } else {
