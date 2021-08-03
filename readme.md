@@ -26,7 +26,7 @@ Optional arguments accepted:
   - Pass `--date=<DATE>` to search for slots after a particular date. Date must be in dd-mm-yyyy format  (default is today's date).
   - Pass `--appts=<APPOINTMENT-COUNT>` to specify the number of session details you want to receive in the notification (default is 2).
   - Pass `--pin=<YOUR-AREA-PIN-CODE>` to search for available slots based on pin code. (`<DISTRICT-ID>` is not required and will be ignored if searching by PIN)
-  - Pass `--centre-type=<CENTRE-TYPE>` to search for specific centres based on payment. Accepted values are `free`, `paid` and `all`. (default is all)
+  - Pass `--type=<VACCINE-TYPE>` to search for vaccine centers based on price. Accepted values are `free`, `paid` and `all`. (default is all)
   - Pass `--keep-alive=<KEEP-ALIVE-FLAG>` to continue search even after slots are found. Accepted values are `true` and `false`. (default is false)
 
   (Note: Search by District is recommended as searching by PINCODE will have lower chances of finding a slot)
