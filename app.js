@@ -225,7 +225,7 @@ function pingCowin({
           });
         });
 
-        if (appointmentsAvailableCount - appointmentsListLimit) {
+        if (appointmentsAvailableCount - appointmentsListLimit > 0) {
           dataOfSlot = `${dataOfSlot}\n${
             appointmentsAvailableCount - appointmentsListLimit
           } more slots available...`;
