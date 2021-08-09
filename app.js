@@ -10,6 +10,7 @@ const notificationSound = path.join(__dirname, "sounds/beep.wav");
 const defaultInterval = 10; // interval between pings in minutes
 const appointmentsListLimit = 2 // Increase/Decrease it based on the amount of information you want in the notification.
 const defaultKeepAlive = false;
+const defaultType = 'all';
 let timer = null;
 const sampleUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
 const baseUrl = 'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/'
@@ -59,7 +60,15 @@ function checkParams() {
         else if ((argv['keep-alive'] && typeof argv['keep-alive'] !== 'string') && (argv['keep-alive'].toLowerCase() !== 'true' && argv['keep-alive'].toLowerCase() !== 'false')) {
             console.error('Please set keep-alive param as true or false');
             return;
-        }
+        } else if (
+            argv['type'] &&
+            typeof argv['type'] !== 'string' &&
+            argv['type'].toLowerCase() !== 'free' &&
+            argv['type'].toLowerCase() !== 'paid' &&
+            argv['type'].toLowerCase() !== 'all'
+          ) {
+            console.error('Please set type param as free, paid or all');
+            return;}
         else {
             const params = {
                 vaccine: argv.vaccine === 'spuntik' ? argv.vaccine + ' v' : argv.vaccine, // vaccine = COVISHIELD , COVAXIN, SPUTNIK
@@ -72,7 +81,8 @@ function checkParams() {
                 appointmentsListLimit: argv.appts || appointmentsListLimit,
                 date: argv.date,
                 pin: argv.pin,
-                keepAlive: argv['keep-alive'] ? argv['keep-alive'].toLowerCase() === 'true' : defaultKeepAlive
+                keepAlive: argv['keep-alive'] ? argv['keep-alive'].toLowerCase() === 'true' : defaultKeepAlive,
+                type: argv['type'] ? argv['type'].toLowerCase() : defaultType,
             }
 
             console.log('\nCowin Pinger started succesfully\n');
@@ -80,6 +90,7 @@ function checkParams() {
             console.log(`Age= ${params.age}`);
             console.log(`Dose= ${params.dose === 1 ? 'First Dose' : 'Second Dose'}`);
             params.vaccine && console.log(`Vaccine= ${params.vaccine.toUpperCase()}`);
+            params.type && console.log(`Type= ${params.type.toUpperCase()}`);
             if (params.pin) {
                 console.log(`Pincode= ${params.pin}`);
             } else {
@@ -111,7 +122,7 @@ function scheduleCowinPinger(params) {
     }, params.interval * 60000);
 }
 
-function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pin, vaccine, dose, keepAlive }) {
+function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pin, vaccine, dose, keepAlive, type }) {
     // get current date on every iteration if not custom date
     date = date || format(new Date(), 'dd-MM-yyyy')
 
@@ -126,6 +137,9 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
         let appointmentsAvailableCount = 0;
         if (centers.length) {
             centers.forEach(center => {
+                if (type !== center.fee_type || type !== 'all') {
+                    return;
+                  }
                 center.sessions.forEach((session => {
                     if (session.min_age_limit === ageLimit && session.available_capacity > 0) {
                         if (dose === 1 && session.available_capacity_dose1 <= 0) {
@@ -146,7 +160,7 @@ function pingCowin({ key, hook, age, districtId, appointmentsListLimit, date, pi
                 }))
             });
 
-            if (appointmentsAvailableCount - appointmentsListLimit) {
+            if ((appointmentsAvailableCount - appointmentsListLimit) > 0) {
                 dataOfSlot = `${dataOfSlot}\n${appointmentsAvailableCount - appointmentsListLimit} more slots available...`
             }
         }
